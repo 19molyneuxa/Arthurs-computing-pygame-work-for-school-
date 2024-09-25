@@ -1,6 +1,8 @@
 import pygame
 import random
 
+screen = pygame.display.set_mode([1200,800])
+
 icon = pygame.image.load("bob.PNG")
 pygame.display.set_icon(icon)
 
@@ -8,68 +10,12 @@ bg = pygame.image.load("nyan.jpg")
 bg = pygame.transform.scale (bg,[1200,800])
 
 cat = pygame.image.load("sprite.jpg")
-frog = pygame.image.load("1.png")
-bullet = pygame.image.load("big.jpg")
-
-
 cat = pygame.transform.scale(cat,[100,62])
-frog = pygame.transform.scale(frog,[50,50])
-bullet = pygame.transform.scale(bullet,[150,30])
 
-
-
-
-
-
-run = True 
-#bullet spawning position 
-playerx = 0
-playery = 0
-################################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-################################################################################################
-
-
-
-
-
-
-
-        
-
-###################################################################################################
-
+isjump = False
+velocity = 5
+mass = 1
+##################################################################### player sprite
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):                         #__init__ will make box
@@ -88,11 +34,9 @@ class Player(pygame.sprite.Sprite):
 
         
     def moveup(self):
-        self.rect.y -= 10 ### change to 19.8 if gravity used 
-       
-        if self.rect.top < 0:
-            self.rect.top = 0
-        
+        isjump = True
+    def moveupjump(self):
+        self.rect.y -= force 
 
             
     def movedown(self):
@@ -130,70 +74,18 @@ class Player(pygame.sprite.Sprite):
     #jumping code 
     
  
-    
-
-
-
-           
-#################################################################
-
-
-
-   
-#####################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#####################################################################
-screen = pygame.display.set_mode([1200,800])
+##################################################################### sprite groups and induvidual sprites
 
 players = pygame.sprite.Group()
-
-
-#####################################################################
-
 player = Player ()
 
-
-
-#####################################################################
-
-
+##################################################################### game loop setup
 
 clock = pygame.time.Clock()
 done = False
 while not done:
     
-    clock.tick(60)
+    clock.tick(6)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -201,80 +93,45 @@ while not done:
 
 
 
+##################################################################### player 1 inputs
+
+    keys = pygame.key.get_pressed()
+               
+    if keys [pygame.K_UP]:
+        player.moveup()
+    if isjump == True:
+            force = (1/2)*mass*(velocity**2)
+            player.moveupjump()
+            velocity = velocity -1
+            if velocity < 0:
+                mass = -1
+            if velocity == -6:
+                isjump == False
+                velocity = 5
+                mass = 1
+    pygame.time.delay(10)
+
+
+
+
 
 
             
-    #############################
-  
-   
-
-  
-
-
-
-
-
-
-    
-    #############################
-
-   # for x in players:                                     gravity code 
-  #      x.gravity()
-
-
-
-
-
-        
-    #############################
-    
-
-
-
-
-
-
-
-
-     
- 
-  
-    keys = pygame.key.get_pressed()
-    
-                
-    if keys [pygame.K_UP]:
-       
-        player.moveup ()
-        
-        
-        
     if keys [pygame.K_DOWN]:
         player.movedown()
       
-       
-       
-
-       
     if keys [pygame.K_LEFT]:
         player.moveleft()
     
     if keys [pygame.K_RIGHT]:
         player.moveright()
-    ########################        
-  
 
-    #######################
-
- 
-
-#####################################################################
+##################################################################### drawing stuff
 
     
 
     screen.blit(bg,(0,0))
     players.draw(screen)
-  
-  
     pygame.display.flip()
     screen.fill((0, 0, 0))
 pygame.quit()
